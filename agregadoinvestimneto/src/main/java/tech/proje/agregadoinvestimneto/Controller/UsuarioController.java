@@ -3,8 +3,9 @@ package tech.proje.agregadoinvestimneto.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.proje.agregadoinvestimneto.Dtos.DtosAccountSaida;
 import tech.proje.agregadoinvestimneto.Dtos.DtosUsuarioEntrada;
-import tech.proje.agregadoinvestimneto.Dtos.DtosUsuarioSaida;
+import tech.proje.agregadoinvestimneto.Dtos.DtosAccountEntrada;
 import tech.proje.agregadoinvestimneto.Entity.Usuario;
 import tech.proje.agregadoinvestimneto.Service.UsuarioService;
 
@@ -44,5 +45,16 @@ public class UsuarioController {
     public  ResponseEntity<Void> deleteByid(@PathVariable("id")String id ){
             usuarioService.deleteUserById(id);
          return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("{id}/account")
+    public ResponseEntity<Void> createdAccount(@PathVariable("id")String userid , DtosAccountEntrada dtosAcoount){
+            usuarioService.salveAcoount(userid,dtosAcoount);
+            return ResponseEntity.ok().build();
+    }
+    @GetMapping("{id}/account")
+    public ResponseEntity<List<DtosAccountSaida>> listaAccount(@PathVariable("id")String idUser){
+        var listaAccountSaida = usuarioService.listaDeAccounts(idUser);
+        return ResponseEntity.ok(listaAccountSaida);
     }
 }

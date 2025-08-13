@@ -3,13 +3,22 @@ package tech.proje.agregadoinvestimneto.Service;
 
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import tech.proje.agregadoinvestimneto.Dtos.DtosAccountEntrada;
+import tech.proje.agregadoinvestimneto.Dtos.DtosAccountSaida;
 import tech.proje.agregadoinvestimneto.Dtos.DtosUsuarioEntrada;
+import tech.proje.agregadoinvestimneto.Entity.Account;
+import tech.proje.agregadoinvestimneto.Entity.BillingAnddress;
 import tech.proje.agregadoinvestimneto.Entity.Usuario;
+import tech.proje.agregadoinvestimneto.Respository.AccountRepository;
+import tech.proje.agregadoinvestimneto.Respository.BillingAnddressRepositoy;
 import tech.proje.agregadoinvestimneto.Respository.UsuarioRepository;
 
 import javax.swing.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +27,12 @@ import java.util.UUID;
 public class UsuarioService {
     @Autowired
     private UsuarioRepository repositoryUsuario;
+
+    @Autowired
+    private BillingAnddressRepositoy billingAnddressRepositoy;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
 
     public UUID createUsuairo(DtosUsuarioEntrada dtosUsuarioEntrada) {
@@ -67,6 +82,40 @@ public class UsuarioService {
         }
 
 
+    }
+
+    public void salveAcoount(String userid, DtosAccountEntrada dtosAcoount) {
+        var user = repositoryUsuario.findById(UUID.fromString(userid))
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+            var account = new Account(
+                    dtosAcoount.descrip(),
+                    user,
+                    null,
+                    new ArrayList<>()
+
+
+            );
+
+          var  accountCreate = accountRepository.save(account);
+
+           var  billingAnddres = new BillingAnddress(
+                   accountCreate.getIdAccout(),
+                   dtosAcoount.street(),
+                   dtosAcoount.number(),
+                   account
+           );
+           billingAnddressRepositoy.save(billingAnddres);
+
+    }
+
+    public List<DtosAccountSaida> listaDeAccounts(String userid) {
+        var user = repositoryUsuario.findById(UUID.fromString(userid))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        var listaAccouts = user.getAccounts().stream().
+                map(ac -> new DtosAccountSaida(ac.getIdAccout().toString(),ac.getDescription())).toList();
+         return  listaAccouts;
     }
 
 }

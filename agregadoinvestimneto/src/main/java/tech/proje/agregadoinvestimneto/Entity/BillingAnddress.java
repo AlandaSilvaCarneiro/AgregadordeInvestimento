@@ -21,7 +21,7 @@ public class BillingAnddress {
     @Column(name = "Number")
     private String number;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "Account_id")
     private Account account;
@@ -31,14 +31,12 @@ public class BillingAnddress {
     public BillingAnddress() {
     }
 
-    public BillingAnddress(UUID billingAddressId, String street, String number) {
+
+    public BillingAnddress(UUID billingAddressId, String street, String number, Account account) {
         this.billingAddressId = billingAddressId;
         this.street = street;
         this.number = number;
-    }
-
-    public UUID getBillingAddressId() {
-        return billingAddressId;
+        this.account = account;
     }
 
     public String getStreet() {

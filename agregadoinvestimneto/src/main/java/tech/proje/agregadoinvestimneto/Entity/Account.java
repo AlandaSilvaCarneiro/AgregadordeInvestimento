@@ -25,15 +25,36 @@ public class Account {
 
 
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "account")
     @PrimaryKeyJoinColumn
     private BillingAnddress billingAnddress;
+
+    public BillingAnddress getBillingAnddress() {
+        return billingAnddress;
+    }
+
+    public List<AccountStock> getAccountStocks() {
+        return accountStocks;
+    }
 
     @OneToMany(mappedBy = "account")
     private List<AccountStock> accountStocks;
     public Account() {
     }
+    public Account(String description, Usuario user, BillingAnddress billingAnddress, List<AccountStock> accountStocks, UUID idAccout) {
+        this.description = description;
+        this.user = user;
+        this.billingAnddress = billingAnddress;
+        this.accountStocks = accountStocks;
+        this.idAccout = idAccout;
+    }
 
+    public Account(String description, Usuario user, BillingAnddress billingAnddress, List<AccountStock> accountStocks) {
+        this.description = description;
+        this.user = user;
+        this.billingAnddress = billingAnddress;
+        this.accountStocks = accountStocks;
+    }
 
     public Usuario getUser() {
         return user;
@@ -43,10 +64,6 @@ public class Account {
         this.user = user;
     }
 
-    public Account(UUID idAccout, String description) {
-        this.idAccout = idAccout;
-        this.description = description;
-    }
 
 
     public UUID getIdAccout() {
