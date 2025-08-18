@@ -74,7 +74,7 @@ class UsuarioServiceTest {
 
             assertThrows(RuntimeException.class, () -> usuarioServicemo.createUsuairo(input));
         }
-
+        
 
 
      @Nested
