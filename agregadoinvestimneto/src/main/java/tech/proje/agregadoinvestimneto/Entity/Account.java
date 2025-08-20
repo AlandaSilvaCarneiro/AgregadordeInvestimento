@@ -65,6 +65,13 @@ public class Account {
     }
 
 
+    public void setBillingAnddress(BillingAnddress billingAnddress) {
+        this.billingAnddress = billingAnddress;
+    }
+
+    public void setAccountStocks(List<AccountStock> accountStocks) {
+        this.accountStocks = accountStocks;
+    }
 
     public UUID getIdAccout() {
         return idAccout;

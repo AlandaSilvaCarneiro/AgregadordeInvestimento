@@ -20,6 +20,7 @@ import tech.proje.agregadoinvestimneto.Respository.AccountRepository;
 import tech.proje.agregadoinvestimneto.Respository.AccountStockRepository;
 import tech.proje.agregadoinvestimneto.Respository.StockRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -147,5 +148,63 @@ class AccountServiceTest {
 
         }
     }
+
+    @Nested
+    class acocuntListget{
+        @Test
+        @DisplayName("retorno com sucesso da lista")
+        void listagetSuccesscase(){
+            var accoount = new Account();
+            var idAccount = UUID.randomUUID();
+            accoount.setIdAccout(idAccount);
+
+            var stock = new Stock();
+            stock.setStockId("STOCK123");
+
+            var accountStock = new AccountStock();
+            accountStock.setStock(stock);
+
+            accoount.setAccountStocks(List.of(accountStock));
+
+            doReturn(Optional.of(accoount)).when(accountRepository).findById(uuidArgumentCaptor.capture());
+
+            var output = accountService.listaAccountStock(idAccount.toString());
+
+            assertEquals(accoount.getAccountStocks().size(),output.size());
+            assertEquals(idAccount,uuidArgumentCaptor.getValue());
+
+            verify(accountRepository,timeout(1)).findById(uuidArgumentCaptor.capture());
+
+
+
+        }
+        @Test
+        @DisplayName("Caso em que listaget retonar um Throw")
+       void listagetThrow(){
+            var accoount = new Account();
+            var idAccount = UUID.randomUUID();
+            accoount.setIdAccout(idAccount);
+
+            var stock = new Stock();
+            stock.setStockId("STOCK123");
+
+            var accountStock = new AccountStock();
+            accountStock.setStock(stock);
+
+            accoount.setAccountStocks(List.of(accountStock));
+
+            doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(accountRepository).findById(any());
+
+
+            assertThrows(ResponseStatusException.class, () -> accountService.listaAccountStock(idAccount.toString()));
+
+
+
+
+        }
+
+
+    }
+
 
 }

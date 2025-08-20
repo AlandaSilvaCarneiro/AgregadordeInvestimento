@@ -16,8 +16,10 @@ import tech.proje.agregadoinvestimneto.Entity.Stock;
 import tech.proje.agregadoinvestimneto.Entity.Usuario;
 import tech.proje.agregadoinvestimneto.Respository.StockRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -43,15 +45,31 @@ class StockServiceTest {
         @Test
         @DisplayName("teste de criação de stock caso de sucesso")
         void createSalveSuccessStock() {
-            var input = new DtosStokEntrada(
+            var dtoStock = new DtosStokEntrada(
                     "MGALU89",
                     "achoes da empresa magalu"
             );
+
+            var stockEntity = new Stock(
+                    dtoStock.idstok(),
+                    dtoStock.descipt()
+            );
+            doReturn(stockEntity).when(stockRepository).save(stockArgumentCaptor.capture());
+            stockService.createStok(dtoStock);
+            var stockOutput = stockArgumentCaptor.getValue();
+            assertEquals(stockEntity.getDescription(),stockOutput.getDescription());
+            assertEquals(stockEntity.getStockId(),stockOutput.getStockId());
+            verify(stockRepository,timeout(1)).save(stockArgumentCaptor.capture());
+
+
+
+
 
 
 
 
         }
+
 
     }
 
