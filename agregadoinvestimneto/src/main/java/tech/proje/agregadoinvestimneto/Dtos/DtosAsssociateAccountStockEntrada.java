@@ -1,4 +1,10 @@
 package tech.proje.agregadoinvestimneto.Dtos;
 
-public record DtosAsssociateAccountStockEntrada(String stockID, Integer quant) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record DtosAsssociateAccountStockEntrada(
+        @Schema(description = "Id de um stock", example = "MAG4")
+        String stockID,
+        @Schema(description = "quantidades de stock", example = "4")
+        Integer quant) {
 }
